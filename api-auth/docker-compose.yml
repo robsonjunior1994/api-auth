@@ -3,8 +3,8 @@
     build:
       context: .
       dockerfile: Dockerfile
-    ports:
-      - "7136:8080"
+    #ports:
+    #  - "7136:8080"
     depends_on:
       - mongo
     networks:
