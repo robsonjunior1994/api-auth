@@ -1,0 +1,48 @@
+﻿services:
+  api-auth:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "7136:8080"
+    depends_on:
+      - mongo
+    networks:
+    - api-network  # Conecta ao network "api-network"
+  
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+        - "80:80"
+        - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./certificado.crt:/etc/nginx/ssl/certificado.crt
+      - ./chave_privada.key:/etc/nginx/ssl/chave_privada.key
+    depends_on:
+        - api-auth
+    command: >
+      sh -c "apt-get update && apt-get install -y vim && nginx -g 'daemon off;'"
+    networks:
+        - api-network
+
+  mongo:
+    image: mongo  # Imagem oficial do MongoDB
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root  # Define o usuário root
+      - MONGO_INITDB_ROOT_PASSWORD=root  # Define a senha do root
+    ports:
+      - "27017:27017"  # Expõe a porta 27017 do MongoDB
+    volumes:
+      - data:/data/db  # Volume para persistência de dados
+    networks:
+      - api-network  # Conecta ao network "api-network"
+
+
+
+volumes:
+  data:  # Define o volume para persistência de dados
+
+networks:
+  api-network:  # Define a rede "api-network"
