@@ -9,14 +9,16 @@ namespace api_auth.Controllers
     {
         [HttpPost]
         [Consumes("application/json")]
+        [Produces("application/json")]
         public async Task<IActionResult> Create([FromBody] User user)
         {
             return StatusCode(501, "Not Implemented");
         }
 
-        [Consumes("application/json")]
         [Route("login")]
         [HttpPost]
+        [Consumes("application/json")]
+        [Produces("application/json")]
         public async Task<IActionResult> Login([FromBody] User user)
         {
             return StatusCode(501, "Not Implemented");
