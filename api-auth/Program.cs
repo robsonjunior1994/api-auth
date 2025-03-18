@@ -1,6 +1,20 @@
 using MongoDB.Driver;
 
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
 var builder = WebApplication.CreateBuilder(args);
+
+//Configurando o cors
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+                      policy =>
+                      {
+                          policy.WithOrigins("https://localhost:7068");
+                          policy.WithMethods("GET", "POST", "PUT", "DELETE");
+                          policy.WithHeaders("Accept", "Content-Type", "Origin", "X-My-Header");
+                      });
+});
 
 // Confirgurando o MongoDB
 var configuration = builder.Configuration;
@@ -25,6 +39,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors(MyAllowSpecificOrigins);
 
 app.UseAuthorization();
 
